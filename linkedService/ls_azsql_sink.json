@@ -1,0 +1,25 @@
+{
+	"name": "ls_azsql_sink",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"servername": {
+				"type": "string"
+			},
+			"userid": {
+				"type": "string"
+			},
+			"userpassword": {
+				"type": "string"
+			},
+			"sink_database_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().servername};Initial Catalog=@{linkedService().sink_database_name};User ID=@{linkedService().userid};Password=@{linkedService().userpassword}"
+		}
+	}
+}

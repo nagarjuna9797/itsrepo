@@ -1,0 +1,258 @@
+{
+	"name": "source_sinK_archive_delete",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_adls_src",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_source_folder_name": {
+								"value": "@pipeline().parameters.pl_source_filder_name",
+								"type": "Expression"
+							},
+							"ds_source_table_name": {
+								"value": "@pipeline().parameters.pl_source_table_name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_azsql_sink",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_servername": {
+								"value": "@pipeline().parameters.pl_servername",
+								"type": "Expression"
+							},
+							"ds_userid": {
+								"value": "@pipeline().parameters.pl_userid",
+								"type": "Expression"
+							},
+							"ds_userpassword": {
+								"value": "@pipeline().parameters.pl_password",
+								"type": "Expression"
+							},
+							"ds_sink_database_name": {
+								"value": "@pipeline().parameters.pl_sink_databasename",
+								"type": "Expression"
+							},
+							"ds_sink_table_name": {
+								"value": "@pipeline().parameters.pl_sink_table_name",
+								"type": "Expression"
+							},
+							"ds_sink_schema_name": {
+								"value": "@pipeline().parameters.pl_sink_schema_name",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy data2",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_adls_src",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_source_folder_name": {
+								"value": "@pipeline().parameters.pl_source_filder_name",
+								"type": "Expression"
+							},
+							"ds_source_table_name": {
+								"value": "@pipeline().parameters.pl_source_table_name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_src",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_source_folder_name": {
+								"value": "@pipeline().parameters.pl_cop2_sink_folder",
+								"type": "Expression"
+							},
+							"ds_source_table_name": {
+								"value": "@concat(replace(pipeline().parameters.pl_cop2_sink_filename,'.csv' ,''),'-',formatdatetime(utcnow(),'yyyyMMdd'),'.csv')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Delete1",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Copy data1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Copy data2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_adls_src",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_source_folder_name": {
+								"value": "@pipeline().parameters.pl_source_filder_name",
+								"type": "Expression"
+							},
+							"ds_source_table_name": {
+								"value": "@pipeline().parameters.pl_source_table_name",
+								"type": "Expression"
+							}
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pl_source_filder_name": {
+				"type": "string"
+			},
+			"pl_source_table_name": {
+				"type": "string"
+			},
+			"pl_servername": {
+				"type": "string"
+			},
+			"pl_userid": {
+				"type": "string"
+			},
+			"pl_password": {
+				"type": "string"
+			},
+			"pl_sink_databasename": {
+				"type": "string"
+			},
+			"pl_sink_table_name": {
+				"type": "string"
+			},
+			"pl_sink_schema_name": {
+				"type": "string"
+			},
+			"pl_cop2_sink_folder": {
+				"type": "string"
+			},
+			"pl_cop2_sink_filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-03T03:38:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

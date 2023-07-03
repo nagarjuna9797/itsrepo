@@ -1,0 +1,17 @@
+{
+	"name": "ds_lkp_azsql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_lkp_azsql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "confirg"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

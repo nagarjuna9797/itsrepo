@@ -1,0 +1,61 @@
+{
+	"name": "ds_azsql_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azsql_sink",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"servername": {
+					"value": "@dataset().ds_servername",
+					"type": "Expression"
+				},
+				"userid": {
+					"value": "@dataset().ds_userid",
+					"type": "Expression"
+				},
+				"userpassword": {
+					"value": "@dataset().ds_userpassword",
+					"type": "Expression"
+				},
+				"sink_database_name": {
+					"value": "@dataset().ds_sink_database_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"ds_servername": {
+				"type": "string"
+			},
+			"ds_userid": {
+				"type": "string"
+			},
+			"ds_userpassword": {
+				"type": "string"
+			},
+			"ds_sink_database_name": {
+				"type": "string"
+			},
+			"ds_sink_table_name": {
+				"type": "string"
+			},
+			"ds_sink_schema_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().ds_sink_schema_name",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().ds_sink_table_name",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

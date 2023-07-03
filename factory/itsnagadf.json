@@ -1,0 +1,9 @@
+{
+	"name": "itsnagadf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "640f8a32-99c2-491d-8866-8604292dc98e",
+		"tenantId": "865cc515-a530-4538-8ef8-072b7b2be759"
+	}
+}
