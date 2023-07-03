@@ -1,0 +1,24 @@
+{
+	"name": "ds_adlsgen2_input",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_gen2_src",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "employee_file.csv",
+				"folderPath": "input",
+				"fileSystem": "container"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
